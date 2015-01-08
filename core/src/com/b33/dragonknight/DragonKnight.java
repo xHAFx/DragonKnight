@@ -1,53 +1,63 @@
 package com.b33.dragonknight;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class DragonKnight extends ApplicationAdapter implements InputProcessor {
+public class DragonKnight extends Game implements InputProcessor {
+
+    private final static int WALK_ROWS = 2;
+    private final static int WALK_COLS = 4;
 
     private OrthographicCamera camera;
 	private SpriteBatch batch;
-	private Texture texture;
+	private Texture walkSheet;
+    private TextureRegion[] walkFrames;
+    private TextureRegion currentFrame;
+    private Animation walkAnimation;
     private TiledMap map;
-    private Viewport viewport;
     private TiledMapRenderer tiledMapRenderer;
-    private Sprite sprite;
+    private Stage scene;
+    private float stateTime;
+    private Stage hud;
 	
 	@Override
 	public void create () {
         camera = new OrthographicCamera();
-        viewport = new StretchViewport(1280, 720, camera);
+        scene = new Stage(new StretchViewport(1280, 720, camera));
+
+        walkSheet = new Texture(Gdx.files.internal("data/player_walk_sheet.png"));
+        TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth()/WALK_COLS, walkSheet.getHeight()/WALK_ROWS);
+        walkFrames = new TextureRegion[WALK_ROWS * WALK_COLS];
+        int index = 0;
+        for(int i = 0; i < WALK_ROWS; i++) {
+            for(int j = 0; j < WALK_COLS; j++) {
+                walkFrames[index++] = tmp[i][j];
+            }
+        }
+        walkAnimation = new Animation(0.125f, walkFrames);
+        stateTime = 0f;
+        //hud = new Stage(new StretchViewport(1280, 720, camera));
 
 
 		batch = new SpriteBatch();
         map = new TmxMapLoader().load("data/level1.tmx");
-        tiledMapRenderer = new OrthogonalTiledMapRenderer(map);
-
-
-        texture = new Texture(Gdx.files.internal("data/player.png"));
-
-        sprite = new Sprite(texture);
-        sprite.setPosition(100, 50);
+        tiledMapRenderer = new OrthogonalTiledMapRenderer(map, batch);
 
         Gdx.input.setInputProcessor(this);
 	}
@@ -55,35 +65,40 @@ public class DragonKnight extends ApplicationAdapter implements InputProcessor {
     @Override
     public void dispose() {
         super.dispose();
-        texture.dispose();
+        batch.dispose();
     }
 
     @Override
 	public void render () {
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+        super.render();
+		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || (Gdx.input.isTouched(0) && Gdx.input.getX(0) < viewport.getScreenWidth()/2)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || (Gdx.input.isTouched(0) && Gdx.input.getX(0) < scene.getViewport().getScreenWidth()/2)) {
             camera.translate(-10.0f, 0f);
-            sprite.translate(-10.0f, 0f);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) || (Gdx.input.isTouched(0) && Gdx.input.getX(0) > viewport.getScreenWidth()/2)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) || (Gdx.input.isTouched(0) && Gdx.input.getX(0) > scene.getViewport().getScreenWidth()/2)) {
             camera.translate(10.0f, 0f);
-            sprite.translate(10.0f, 0f);
         }
-        batch.setProjectionMatrix(camera.combined);
+
         camera.update();
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
+
+        stateTime += Gdx.graphics.getDeltaTime();
+        currentFrame = walkAnimation.getKeyFrame(stateTime, true);
         batch.begin();
-        sprite.draw(batch);
+        batch.draw(currentFrame, 50, 50);
         batch.end();
+
+        batch.setProjectionMatrix(camera.combined);
+
+
 	}
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height);
-        camera.position.set(camera.viewportWidth/2, camera.viewportHeight/2, 0);
+        scene.getViewport().update(width, height, true);
     }
 
     @Override
