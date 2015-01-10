@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -22,7 +23,7 @@ public class Player extends Sprite {
     private static final Vector2 VELOCITY = new Vector2();
 
     /** Player movement speed **/
-    public static final float SPEED = 60 * 2;
+    public static final float SPEED = 80 * 2;
 
     /** Default player gravity **/
     private static final float GRAVITY = 60 * 1.0f;
@@ -47,6 +48,10 @@ public class Player extends Sprite {
         this.VELOCITY.set(x, y);
     }
 
+    public void setPlayerFacing(FACE direction) {
+        this.playerFacing = direction;
+    }
+
     @Override
     public void draw(Batch batch) {
         update(Gdx.graphics.getDeltaTime());
@@ -64,45 +69,37 @@ public class Player extends Sprite {
             }
         }
         walkAnimation = new Animation(0.125f, walkFrames);
+        currentFrame = walkAnimation.getKeyFrame(0);
 
         this.set(new Sprite(walkSheet));
+        this.setRegion(currentFrame);
+        this.setSize(128f, 64f);
+        this.setY(50f);
         this.playerFacing = FACE.RIGHT;
     }
 
     public void update(float delta) {
         stateTime += delta;
 
-        //System.out.println(this.VELOCITY.x);
-
         /** Is player moving? **/
 
-        if(this.VELOCITY.x > 0f) {
+        if(this.VELOCITY.x > 0f || this.VELOCITY.x < 0f) {
             currentFrame = walkAnimation.getKeyFrame(stateTime, true);
-            /** Player is facing wrong direction for movement **/
-            if(playerFacing == FACE.LEFT) {
-                playerFacing = FACE.RIGHT;
-            }
-        }
-        if(this.VELOCITY.x < 0f) {
-            currentFrame = walkAnimation.getKeyFrame(stateTime, true);
-            /** Player is facing wrong direction for movement **/
-            if(playerFacing == FACE.RIGHT) {
-                playerFacing = FACE.LEFT;
-            }
-        }
-
-        if(this.VELOCITY.x == 0f) {
+        } else {
             currentFrame = walkAnimation.getKeyFrame(0);
         }
 
 
         this.setRegion(currentFrame);
-        this.setScale(0.25f, 0.25f);
         setX((getX() + VELOCITY.x * delta));
+        if(getX() < 0)
+            setX(0);
 
         if(playerFacing == FACE.LEFT) {
             //this.setOrigin(this.getWidth()/4, this.getHeight()/2);
             this.flip(true, false);
         }
+
+
     }
 }

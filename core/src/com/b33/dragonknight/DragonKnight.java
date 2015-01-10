@@ -59,25 +59,29 @@ public class DragonKnight extends Game implements InputProcessor {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || (Gdx.input.isTouched(0) && Gdx.input.getX(0) < scene.getViewport().getScreenWidth()/2)) {
-             player.setVelocity(-Player.SPEED, 0f);
-            //camera.translate(-10.0f, 0f);
+            player.setVelocity(-Player.SPEED, 0f);
+            player.setPlayerFacing(Player.FACE.LEFT);
         } else
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) || (Gdx.input.isTouched(0) && Gdx.input.getX(0) > scene.getViewport().getScreenWidth()/2)) {
             player.setVelocity(Player.SPEED, 0f);
-            //camera.translate(10.0f, 0f);
+            player.setPlayerFacing(Player.FACE.RIGHT);
         } else {
             player.setVelocity(0f, 0f);
         }
+
+
+        camera.position.x = player.getX();
+        if(camera.position.x < scene.getViewport().getWorldWidth()/2)
+            camera.position.x = scene.getViewport().getWorldWidth()/2;
 
         camera.update();
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
 
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
         player.draw(batch);
         batch.end();
-
-        batch.setProjectionMatrix(camera.combined);
 
 
 	}
