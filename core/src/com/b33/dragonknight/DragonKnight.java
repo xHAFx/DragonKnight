@@ -24,6 +24,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -40,6 +41,8 @@ public class DragonKnight extends Game implements InputProcessor {
     private Stage hud;
 
     private Player player;
+
+    private static DragonKnight dragonKnight;
 	
 	@Override
 	public void create () {
@@ -57,6 +60,7 @@ public class DragonKnight extends Game implements InputProcessor {
         shapeRenderer = new ShapeRenderer();
 
         Gdx.input.setInputProcessor(this);
+        dragonKnight = this;
 	}
 
     @Override
@@ -91,7 +95,6 @@ public class DragonKnight extends Game implements InputProcessor {
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
 
-        batch.setProjectionMatrix(camera.combined);
         batch.begin();
         player.draw(batch);
         batch.end();
@@ -154,5 +157,13 @@ public class DragonKnight extends Game implements InputProcessor {
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+
+    public static DragonKnight getInstance() {
+        return dragonKnight;
+    }
+
+    public Stage getScene() {
+        return scene;
     }
 }

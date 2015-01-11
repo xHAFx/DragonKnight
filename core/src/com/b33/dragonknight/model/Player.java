@@ -1,5 +1,6 @@
 package com.b33.dragonknight.model;
 
+import com.b33.dragonknight.DragonKnight;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -23,7 +24,7 @@ public class Player extends Sprite {
     private static final Vector2 VELOCITY = new Vector2();
 
     /** Player movement speed **/
-    public static final float SPEED = 80 * 2;
+    public static final float SPEED = 120 * 2;
 
     /** Default player gravity **/
     private static final float GRAVITY = 60 * 1.0f;
@@ -92,14 +93,14 @@ public class Player extends Sprite {
 
         this.setRegion(currentFrame);
         setX((getX() + VELOCITY.x * delta));
-        if(getX() < 0)
+        if(getX() < 0) {
             setX(0);
+        }
 
         if(playerFacing == FACE.LEFT) {
             //this.setOrigin(this.getWidth()/4, this.getHeight()/2);
             this.flip(true, false);
         }
-
 
     }
 }
