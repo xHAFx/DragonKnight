@@ -13,8 +13,13 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -26,6 +31,7 @@ public class DragonKnight extends Game implements InputProcessor {
 	private SpriteBatch batch;
     private TiledMap map;
     private TiledMapRenderer tiledMapRenderer;
+    private MapObjects objects;
     private Stage scene;
     private Stage hud;
 
@@ -40,8 +46,9 @@ public class DragonKnight extends Game implements InputProcessor {
 
 
 		batch = new SpriteBatch();
-        map = new TmxMapLoader().load("data/level1.tmx");
+        map = new TmxMapLoader().load("data/dk_level_1.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(map, batch);
+        objects = map.getLayers().get("objects").getObjects();
 
         Gdx.input.setInputProcessor(this);
 	}
@@ -55,7 +62,7 @@ public class DragonKnight extends Game implements InputProcessor {
     @Override
 	public void render () {
         super.render();
-		Gdx.gl.glClearColor(0, 0, 0, 0);
+		Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || (Gdx.input.isTouched(0) && Gdx.input.getX(0) < scene.getViewport().getScreenWidth()/2)) {
@@ -81,6 +88,10 @@ public class DragonKnight extends Game implements InputProcessor {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         player.draw(batch);
+        for(MapObject object : objects) {
+            //RectangleMapObject rectangleMapObject = (RectangleMapObject) object;
+            //batch.draw(rectangleMapObject.getRectangle().get);
+        }
         batch.end();
 
 

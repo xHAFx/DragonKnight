@@ -74,7 +74,7 @@ public class Player extends Sprite {
         this.set(new Sprite(walkSheet));
         this.setRegion(currentFrame);
         this.setSize(128f, 64f);
-        this.setY(50f);
+        this.setY(143f);
         this.playerFacing = FACE.RIGHT;
     }
 

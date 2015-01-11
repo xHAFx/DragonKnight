@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="200" height="15" tilewidth="48" tileheight="48">
+ <tileset firstgid="1" name="map1" tilewidth="49" tileheight="49">
+  <image source="tilesheet2.png" width="147" height="246"/>
+  <tile id="3">
+   <properties>
+    <property name="blocked" value="true"/>
+   </properties>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="blocked" value="true"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="blocked" value="true"/>
+   </properties>
+  </tile>
+  <tile id="6">
+   <properties>
+    <property name="blocked" value="true"/>
+   </properties>
+  </tile>
+  <tile id="7">
+   <properties>
+    <property name="blocked" value="true"/>
+   </properties>
+  </tile>
+  <tile id="8">
+   <properties>
+    <property name="blocked" value="true"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="blocked" value="true"/>
+   </properties>
+  </tile>
+  <tile id="10">
+   <properties>
+    <property name="blocked" value="true"/>
+   </properties>
+  </tile>
+  <tile id="12">
+   <properties>
+    <property name="blocked" value="true"/>
+   </properties>
+  </tile>
+  <tile id="13">
+   <properties>
+    <property name="blocked" value="true"/>
+   </properties>
+  </tile>
+  <tile id="14">
+   <properties>
+    <property name="blocked" value="true"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="16" name="sky" tilewidth="49" tileheight="49">
+  <image source="sky.png" width="49" height="49"/>
+ </tileset>
+ <layer name="tiles" width="200" height="15">
+  <data encoding="base64" compression="zlib">
+   eJztlUkKwzAMRb1IyGAScv/TFkMMqrA8tKFxyls86nqQvqb2cM4dAAAAAAAAAAAAAAAAAAAAD2XuQMPVLB1oaK1B5G4t8F4X/2d1CbMxuWfMSMj7eNYgwqz0QZyN0EvrBfUYO2ESLB3oyeEL3KWrx3r/WkuYCdlL39ZjP236cx1txj0vzuRank/GvdR3r/zF95pSD26GzhpNFpbflI9daPgUS3tOizf8Bj25/694VvJ7hcZNfObmoCXeUq43Yae2n1I2J7U/JM51/1ro/i7lWs9VKp5BrGv7WtdT5yWX21wMNTFJhowty2+qPoN4r++tFTbmBC35K91p/S2rjVv3pn6Xq6M1F7U69XzF/RfFIqqU
+  </data>
+ </layer>
+ <objectgroup name="objects">
+  <object name="dk_level_1_crate_1" gid="15" x="7295.33" y="671.67"/>
+ </objectgroup>
+</map>
