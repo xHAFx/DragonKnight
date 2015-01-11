@@ -13,15 +13,18 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
@@ -32,6 +35,7 @@ public class DragonKnight extends Game implements InputProcessor {
     private TiledMap map;
     private TiledMapRenderer tiledMapRenderer;
     private MapObjects objects;
+    private ShapeRenderer shapeRenderer;
     private Stage scene;
     private Stage hud;
 
@@ -49,6 +53,8 @@ public class DragonKnight extends Game implements InputProcessor {
         map = new TmxMapLoader().load("data/dk_level_1.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(map, batch);
         objects = map.getLayers().get("objects").getObjects();
+
+        shapeRenderer = new ShapeRenderer();
 
         Gdx.input.setInputProcessor(this);
 	}
@@ -88,12 +94,20 @@ public class DragonKnight extends Game implements InputProcessor {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         player.draw(batch);
+        batch.end();
+
+        shapeRenderer.setProjectionMatrix(camera.combined);
         for(MapObject object : objects) {
+            if(object instanceof  RectangleMapObject) {
+                Rectangle rect = ((RectangleMapObject) object).getRectangle();
+                TiledMapTile tile = map.getTileSets().getTile(15);
+                batch.begin();
+                batch.draw(tile.getTextureRegion(), rect.x, rect.y);
+                batch.end();
+            }
             //RectangleMapObject rectangleMapObject = (RectangleMapObject) object;
             //batch.draw(rectangleMapObject.getRectangle().get);
         }
-        batch.end();
-
 
 	}
 
